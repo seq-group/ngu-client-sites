@@ -1,0 +1,963 @@
+<title>Hacienda Cleaning Proposal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#fafbff;
+    --panel:#ffffff;
+    --ink:#202a2b;
+    --ink-soft:#40424d;
+    --ink-faint:#6e7180;
+    --line:#d3d6e0;
+    --line-strong:#bcbfcc;
+    --accent:#069494;
+    --accent-deep:#057373;
+    --accent-tint:#e3f4f3;
+    --dark:#202a2b;
+    --chevron-mid:#429293;
+    --chevron-bright:#98fcfc;
+    --on-dark:#fafbff;
+    --on-dark-soft:#9da2b3;
+    --on-dark-line:rgba(250,251,255,0.14);
+    --btn-primary-fg:#fafbff;
+    --font-body:'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181a;
+      --panel:#1b2224;
+      --ink:#edeff7;
+      --ink-soft:#bcbfcc;
+      --ink-faint:#9da2b3;
+      --line:#2b3538;
+      --line-strong:#3a464a;
+      --accent:#1fb3b3;
+      --accent-deep:#3fc9c9;
+      --accent-tint:#132a2a;
+      --dark:#0c1819;
+      --on-dark:#fafbff;
+      --on-dark-soft:#9da2b3;
+      --on-dark-line:rgba(250,251,255,0.12);
+      --btn-primary-fg:#0c1819;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181a;
+    --panel:#1b2224;
+    --ink:#edeff7;
+    --ink-soft:#bcbfcc;
+    --ink-faint:#9da2b3;
+    --line:#2b3538;
+    --line-strong:#3a464a;
+    --accent:#1fb3b3;
+    --accent-deep:#3fc9c9;
+    --accent-tint:#132a2a;
+    --dark:#0c1819;
+    --on-dark:#fafbff;
+    --on-dark-soft:#9da2b3;
+    --on-dark-line:rgba(250,251,255,0.12);
+    --btn-primary-fg:#0c1819;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{max-width:100%;display:block;}
+  a{color:inherit;}
+
+  h1,h2{
+    font-family:var(--font-body);
+    font-weight:800;
+    letter-spacing:-0.025em;
+    text-wrap:balance;
+    margin:0;
+    color:var(--ink);
+  }
+
+  .eyebrow{
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.13em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    font-family:var(--font-body);
+  }
+
+  /* ---------- Brand logo (real Elevex lockup, recoloured via tokens) ---------- */
+  .brand-logo{ height:1.7rem; width:auto; flex-shrink:0; }
+  .brand-logo .logo-mark{ fill:var(--accent); }
+  .brand-logo .logo-word{ fill:var(--ink); }
+  .brand-logo--ondark .logo-word{ fill:var(--on-dark); }
+  .brand-mark{ height:1em; width:auto; color:var(--accent); flex-shrink:0; }
+  .brand-mark path, .brand-mark polygon{ fill:currentColor; }
+
+  /* ---------- Cover ---------- */
+  .cover{
+    position:relative;
+    z-index:0;
+    background:var(--dark);
+    color:var(--on-dark);
+    padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,6vw,3.2rem) clamp(2.8rem,6vw,4.2rem);
+    overflow:hidden;
+    animation:cover-in 0.9s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .cover::after, .commitment::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    opacity:0.05;
+    pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100' height='100' filter='url(%23n)'/></svg>");
+    background-size:140px 140px;
+    mix-blend-mode:overlay;
+  }
+  @media print{ .cover::after, .commitment::after{display:none;} }
+  @keyframes cover-in{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cover{animation:none;}
+  }
+  .cover-graphic{
+    display:none;
+  }
+  .cover-watermark{
+    width:100%;
+    max-width:340px;
+    height:auto;
+    pointer-events:none;
+  }
+  .cover-watermark .cw-bright{fill:var(--chevron-bright);}
+  .cover-watermark .cw-mid{fill:var(--chevron-mid);opacity:0.85;}
+  @media (min-width:900px){
+    .cover-graphic{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:1 1 260px;
+      padding:1rem 0;
+    }
+  }
+  .commitment{position:relative;z-index:0;overflow:hidden;}
+  .commitment-mark{
+    position:absolute;
+    top:clamp(1rem,3vw,1.5rem);
+    right:clamp(1rem,3vw,1.5rem);
+    width:min(18vw,150px);
+    height:auto;
+    pointer-events:none;
+    z-index:-1;
+    opacity:0.9;
+  }
+  .commitment-mark .cw-bright{fill:var(--chevron-bright);opacity:0.6;}
+  .commitment-mark .cw-mid{fill:var(--chevron-mid);opacity:0.5;}
+  @media print{ .commitment-mark{display:none;} }
+  .cover-inner{
+    position:relative;
+    max-width:960px;
+    margin:0 auto;
+  }
+  .cover-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:1rem;
+    margin-bottom:clamp(2.8rem,9vw,4.6rem);
+  }
+  .cover-body{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:clamp(1.5rem,5vw,3.5rem);
+  }
+  .cover-copy{
+    flex:1 1 400px;
+    min-width:280px;
+  }
+  .tagline{
+    font-size:0.72rem;
+    font-weight:600;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+  .cover .tagline{
+    color:var(--chevron-bright);
+  }
+  .cover .eyebrow{color:var(--on-dark-soft);}
+  .hr-mark{
+    display:block;
+    width:38px;
+    height:1px;
+    background:var(--accent);
+    margin:1.1rem 0 1.3rem;
+    transform-origin:left;
+    animation:hr-draw 0.7s 0.5s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes hr-draw{ from{transform:scaleX(0);} to{transform:scaleX(1);} }
+  @media (prefers-reduced-motion: reduce){
+    .hr-mark{animation:none;}
+  }
+  .cover-title{
+    font-weight:800;
+    font-size:clamp(2.8rem,8.5vw,5.2rem);
+    line-height:0.94;
+    letter-spacing:-0.045em;
+    color:var(--on-dark);
+  }
+  .cover-address{
+    margin-top:0.7rem;
+    font-size:0.95rem;
+    font-weight:500;
+    letter-spacing:0.01em;
+    color:var(--on-dark-soft);
+  }
+  .cover-sub{
+    margin-top:1.5rem;
+    font-weight:500;
+    font-size:clamp(1.05rem,2.4vw,1.2rem);
+    color:var(--on-dark);
+  }
+  .cover-meta{
+    display:flex;
+    flex-wrap:wrap;
+    row-gap:1.1rem;
+    column-gap:clamp(1.5rem,4vw,2.6rem);
+    margin-top:clamp(2.6rem,7vw,3.6rem);
+    padding-top:1.6rem;
+    border-top:1px solid var(--on-dark-line);
+  }
+  .cover-meta-item .eyebrow{margin-bottom:0.4rem;color:var(--on-dark-soft);}
+  .cover-meta-item div{font-size:0.95rem;color:var(--on-dark);font-weight:500;}
+
+  /* ---------- Layout ---------- */
+  .container{
+    max-width:780px;
+    margin:0 auto;
+    padding:0 clamp(1.5rem,6vw,3.2rem);
+  }
+  section{
+    padding:clamp(3.2rem,7vw,4.8rem) 0;
+    border-bottom:1px solid var(--line);
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .intro p{
+    font-size:1.1rem;
+    color:var(--ink-soft);
+    max-width:60ch;
+  }
+  .intro p + p{margin-top:1rem;}
+
+  .section-head{
+    margin-bottom:1.8rem;
+  }
+  .section-head h2{font-size:clamp(1.55rem,3.2vw,1.95rem);margin-top:0.35rem;}
+  h2.section-heading{font-weight:800;font-size:clamp(1.55rem,3.2vw,1.95rem);margin-bottom:1.8rem;}
+
+  /* ---------- Fact list (hairline, not boxed) ---------- */
+  .factlist{
+    display:flex;
+    margin:0 0 2.6rem;
+    padding:0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .factlist div{
+    flex:1;
+    padding:1.15rem 1.4rem 1.15rem 0;
+  }
+  .factlist div + div{
+    padding-left:1.4rem;
+    border-left:1px solid var(--line);
+  }
+  .factlist dt{
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.13em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 0.45rem;
+  }
+  .factlist dd{
+    margin:0;
+    font-size:1.25rem;
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+  }
+  @media (max-width:560px){
+    .factlist{flex-direction:column;}
+    .factlist div + div{padding-left:0;border-left:none;border-top:1px solid var(--line);padding-top:1.15rem;}
+  }
+
+  /* ---------- Scope groups ---------- */
+  h3.group-title{
+    font-weight:700;
+    font-size:0.88rem;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    margin-bottom:0.9rem;
+    padding-bottom:0.55rem;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .scope-groups{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.8rem 1.6rem;
+    margin-bottom:2.4rem;
+  }
+  @media (max-width:700px){
+    .scope-groups{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    .scope-groups{grid-template-columns:1fr;}
+  }
+  ul.ticklist, ul.plain{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:0.6rem;
+  }
+  ul.ticklist li, ul.plain li{
+    position:relative;
+    padding-left:1.05rem;
+    font-size:0.94rem;
+    color:var(--ink-soft);
+  }
+  ul.ticklist li::before, ul.plain li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0.62em;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--accent);
+  }
+
+  /* ---------- Pricing panel ---------- */
+  .pricing-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:clamp(1.7rem,4vw,2.3rem) clamp(1.8rem,5vw,2.6rem);
+  }
+  .ledger-line{
+    display:flex;
+    align-items:baseline;
+    gap:0.6rem;
+    padding-bottom:1.35rem;
+  }
+  .ledger-label{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .ledger-dots{
+    flex:1;
+    border-bottom:1px dotted var(--line-strong);
+    margin-bottom:5px;
+  }
+  .ledger-value{
+    font-size:0.92rem;
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .pricing-total-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:1.5rem;
+    flex-wrap:wrap;
+    padding-top:1.35rem;
+    border-top:1px solid var(--line);
+  }
+  .pricing-total-row .eyebrow{margin:0;}
+  .pricing-figure{
+    font-size:clamp(2.2rem,5vw,2.7rem);
+    font-weight:800;
+    letter-spacing:-0.03em;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink);
+  }
+  .pricing-figure sup{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--ink-faint);
+    margin-left:0.2rem;
+  }
+  .pricing-note{
+    margin-top:1.35rem;
+    padding-top:1.35rem;
+    border-top:1px solid var(--line);
+    font-size:0.86rem;
+    color:var(--ink-faint);
+  }
+
+  .rate-line{
+    display:flex;
+    align-items:baseline;
+    gap:0.6rem;
+    margin:1.5rem 0 0.5rem;
+    font-size:1.3rem;
+    font-weight:800;
+  }
+  .rate-line .eyebrow{margin-right:0.3rem;}
+
+  /* ---------- Notes ---------- */
+  .notes-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:0.8rem;
+  }
+  .notes-list li{
+    font-size:0.92rem;
+    color:var(--ink-soft);
+    padding-left:1.1rem;
+    border-left:2px solid var(--line);
+  }
+
+  .aside-callout{
+    margin-top:1.9rem;
+    background:var(--accent-tint);
+    border-radius:6px;
+    padding:1.15rem 1.35rem;
+    font-size:0.92rem;
+    color:var(--ink-soft);
+  }
+  .aside-callout strong{color:var(--ink);}
+
+  /* ---------- Terms ---------- */
+  .terms-list{
+    list-style:none;
+    counter-reset:term;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:1.15rem;
+  }
+  .terms-list li{
+    counter-increment:term;
+    position:relative;
+    padding-left:2.7rem;
+    font-size:0.94rem;
+    color:var(--ink-soft);
+  }
+  .terms-list li::before{
+    content:counter(term, upper-roman) ".";
+    position:absolute;
+    left:0;
+    top:0.02em;
+    display:inline-block;
+    min-width:2rem;
+    font-size:0.8rem;
+    font-weight:800;
+    letter-spacing:0.02em;
+    color:var(--accent-deep);
+  }
+  .terms-label{
+    display:block;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:0.2rem;
+  }
+
+  /* ---------- Commitment band ---------- */
+  .commitment{
+    background:var(--dark);
+    color:var(--on-dark);
+    border-radius:8px;
+    padding:clamp(2.1rem,5vw,2.9rem);
+    margin:0.5rem 0 0;
+  }
+  .commitment h2{color:var(--on-dark);margin-bottom:1.05rem;}
+  .commitment p{
+    font-size:1.05rem;
+    color:var(--on-dark-soft);
+    max-width:58ch;
+    margin:0 0 1.9rem;
+  }
+  .commitment-figures{
+    display:flex;
+    flex-wrap:wrap;
+    row-gap:1rem;
+    column-gap:clamp(1.4rem,4vw,2.4rem);
+    padding-top:1.7rem;
+    border-top:1px solid var(--on-dark-line);
+  }
+  .commitment-figures strong{
+    display:block;
+    font-size:1.55rem;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    font-variant-numeric:tabular-nums;
+    color:var(--on-dark);
+  }
+  .commitment-figures span{
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--on-dark-soft);
+  }
+  .commitment-figures strong span.countup{
+    font-size:inherit;
+    font-weight:inherit;
+    letter-spacing:inherit;
+    text-transform:none;
+    color:inherit;
+  }
+
+  /* ---------- Sign-off ---------- */
+  .signoff p.closing{
+    font-weight:700;
+    font-size:1.35rem;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    max-width:50ch;
+    margin:0 0 1.5rem;
+  }
+  .team-signoff{
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--ink);
+  }
+  .team-signoff .brand-mark{height:1.2em;}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    text-align:center;
+    padding-top:clamp(3.2rem,7vw,4.4rem);
+    padding-bottom:clamp(3.2rem,7vw,4.4rem);
+  }
+  .cta .tagline{display:block;margin-bottom:1rem;}
+  .cta h2{font-size:clamp(1.7rem,3.6vw,2.15rem);margin-bottom:0.75rem;}
+  .cta p{
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin:0 auto 1.9rem;
+  }
+  .cta-actions{
+    display:flex;
+    justify-content:center;
+    gap:0.9rem;
+    flex-wrap:wrap;
+    margin-bottom:1.7rem;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    padding:1rem 2.2rem;
+    border-radius:999px;
+    font-size:0.78rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    text-decoration:none;
+    transition:transform 0.2s cubic-bezier(.2,.8,.2,1), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .btn-primary{
+    background:var(--accent-deep);
+    color:var(--btn-primary-fg);
+    box-shadow:0 1px 2px rgba(6,148,148,0.15);
+  }
+  .btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 28px -12px rgba(6,148,148,0.5);filter:brightness(1.1);}
+  .btn-primary:active{transform:translateY(0) scale(0.99);}
+  .btn-secondary{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--line-strong);
+  }
+  .btn-secondary:hover{transform:translateY(-2px);border-color:var(--accent);color:var(--accent-deep);box-shadow:0 12px 22px -16px rgba(32,42,43,0.3);}
+  .btn-secondary:active{transform:translateY(0);}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){
+    .btn, .btn-primary:hover, .btn-secondary:hover{transition:none;transform:none;}
+  }
+  .cta-contact{
+    font-size:0.85rem;
+    color:var(--ink-faint);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:0.4rem 1rem;
+  }
+  .cta-contact a{color:var(--ink-soft);text-decoration:none;}
+  .cta-contact a:hover{color:var(--accent-deep);}
+  .cta-fine{font-size:0.8rem;color:var(--ink-faint);margin-top:1.1rem;}
+
+  footer{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.55rem;
+    padding:2.2rem 1.5rem 3.2rem;
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    letter-spacing:0.02em;
+  }
+  footer .brand-logo{height:1rem;}
+
+  .reveal{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s cubic-bezier(.2,.8,.2,1), transform 0.7s cubic-bezier(.2,.8,.2,1);
+  }
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+
+  @media print{
+    .reveal{opacity:1;transform:none;}
+    body{background:#fff;}
+    .cover-watermark{display:none;}
+    .cover{background:var(--dark) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .commitment{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    section{break-inside:avoid;}
+    .cta-actions{display:none;}
+    .cta-fine{display:none;}
+    a{text-decoration:none;color:inherit;}
+  }
+</style>
+
+<header class="cover">
+  <div class="cover-inner">
+    <div class="cover-top">
+      <svg class="brand-logo brand-logo--ondark" viewBox="446 490 812 90" role="img" aria-label="Elevex Property Solutions">
+        <rect class="logo-word" x="715.07" y="497.78" width="14.81" height="73.57"/>
+        <path class="logo-word" d="M809.06,544.95c0-10.45-1.35-15.51-5.05-19.69-4.49-4.83-11.1-6.37-28.04-6.37-18.28,0-25.12,1.21-29.83,5.49-4.49,4.07-6.39,10.34-6.39,21.45,0,13.74,3.02,20.01,11.1,23.64,4.04,1.76,13.46,2.75,25.46,2.75,15.59,0,22.99-1.32,27.59-4.95,3.25-2.64,4.82-6.38,5.04-11.99h-14.58c-.78,5.83-4.59,7.48-16.93,7.48-10.99,0-17.16-.88-19.4-2.86-2.02-1.87-3.03-5.61-3.14-11.54h54.17v-3.41ZM754.89,539.78v-.66c0-3.96,1.68-7.37,4.37-8.8,3.14-1.65,6.39-1.98,17.72-1.98,5.5,0,10.43.77,13.01,1.87,1.12.55,2.24,1.65,3.03,3.08,1.01,1.87,1.34,3.52,1.34,6.49h-39.47Z"/>
+        <polygon class="logo-word" points="871.19 519.77 850.22 560.67 829.24 519.77 812.53 519.77 840.23 571.34 860.2 571.34 887.79 519.77 871.19 519.77"/>
+        <path class="logo-word" d="M960.57,544.95c0-10.45-1.34-15.51-5.04-19.69-4.49-4.83-11.11-6.37-28.04-6.37-18.28,0-25.12,1.21-29.83,5.49-4.49,4.07-6.4,10.34-6.4,21.45,0,13.74,3.03,20.01,11.11,23.64,4.03,1.76,13.45,2.75,25.45,2.75,15.59,0,23-1.32,27.59-4.95,3.26-2.64,4.83-6.38,5.05-11.99h-14.58c-.78,5.83-4.6,7.48-16.93,7.48-10.99,0-17.16-.88-19.41-2.86-2.02-1.87-3.03-5.61-3.14-11.54h54.17v-3.41ZM906.4,539.78v-.66c0-3.96,1.68-7.37,4.38-8.8,3.14-1.65,6.39-1.98,17.72-1.98,5.49,0,10.43.77,13.01,1.87,1.12.55,2.24,1.65,3.03,3.08,1,1.87,1.34,3.52,1.34,6.49h-39.48Z"/>
+        <polygon class="logo-word" points="1010.59 543.74 1033.47 519.77 1014.41 519.77 999.15 536.59 984.24 519.77 964.83 519.77 988.05 544.29 962.37 571.34 981.1 571.34 999.15 551.11 1017.32 571.34 1036.39 571.34 1010.59 543.74"/>
+        <path class="logo-word" d="M1059.18,519.68h-10.18v20.51h2.62v-8.67h7.56c4.47,0,7.6-2.67,7.6-5.95s-3.03-5.89-7.6-5.89M1058.91,529.52h-7.29v-7.85h7.29c3.33,0,5.25,1.7,5.25,3.9s-1.92,3.95-5.25,3.95"/>
+        <path class="logo-word" d="M1090.51,525.51c0-3.22-3.16-5.83-7.9-5.83h-10.38v20.51h2.62v-8.79h6.42l5.31,8.79h2.82l-5.38-8.88c3.9-.5,6.49-2.84,6.49-5.8M1074.85,529.41v-7.74h7.5c3.46,0,5.54,1.67,5.54,3.84s-2.08,3.9-5.54,3.9h-7.5Z"/>
+        <path class="logo-word" d="M1106.55,519.28c-6.89,0-11.33,5.33-11.33,10.67s4.44,10.66,11.33,10.66,11.33-5.33,11.33-10.66-4.44-10.67-11.33-10.67M1106.58,538.56c-5.34,0-8.73-4.36-8.73-8.61s3.39-8.62,8.73-8.62,8.67,4.37,8.67,8.62-3.32,8.61-8.67,8.61"/>
+        <path class="logo-word" d="M1133.95,519.68h-10.18v20.51h2.62v-8.67h7.56c4.47,0,7.6-2.67,7.6-5.95s-3.03-5.89-7.6-5.89M1133.68,529.52h-7.29v-7.85h7.29c3.33,0,5.24,1.7,5.24,3.9s-1.91,3.95-5.24,3.95"/>
+        <polygon class="logo-word" points="1149.62 538.14 1149.62 530.67 1162.79 530.67 1162.79 528.62 1149.62 528.62 1149.62 521.73 1163.26 521.73 1163.26 519.68 1147 519.68 1147 540.19 1163.53 540.19 1163.53 538.14 1149.62 538.14"/>
+        <path class="logo-word" d="M1187.8,525.51c0-3.22-3.16-5.83-7.89-5.83h-10.39v20.51h2.62v-8.79h6.42l5.31,8.79h2.82l-5.37-8.88c3.9-.5,6.48-2.84,6.48-5.8M1172.14,529.41v-7.74h7.5c3.46,0,5.54,1.67,5.54,3.84s-2.08,3.9-5.54,3.9h-7.5Z"/>
+        <polygon class="logo-word" points="1191.74 519.68 1191.74 521.73 1199.71 521.73 1199.71 540.19 1202.33 540.19 1202.33 521.73 1210.29 521.73 1210.29 519.68 1191.74 519.68"/>
+        <polygon class="logo-word" points="1230.7 519.68 1223.34 529.76 1215.98 519.68 1213.16 519.68 1222.03 531.75 1222.03 540.19 1224.65 540.19 1224.65 531.75 1233.52 519.68 1230.7 519.68"/>
+        <path class="logo-word" d="M1059.82,559.72l-5.18-.91c-2.65-.47-3.52-1.4-3.52-3.1,0-2.26,2.35-3.58,5.74-3.58s5.31,1.64,5.88,4.02h2.56c-.61-3.61-3.56-5.89-8.37-5.89s-8.37,2.25-8.37,5.51c0,2.69,1.78,4.27,5.28,4.92l5.17.94c2.83.49,4.3,1.76,4.3,3.72,0,2.49-2.11,4.37-6.04,4.37s-6.19-1.91-6.89-4.55h-2.56c.88,3.84,4.13,6.42,9.41,6.42,4.94,0,8.64-2.58,8.64-6.33,0-2.96-2.15-4.86-6.05-5.54"/>
+        <path class="logo-word" d="M1082.08,550.26c-6.9,0-11.33,5.33-11.33,10.66s4.43,10.67,11.33,10.67,11.32-5.33,11.32-10.67-4.43-10.66-11.32-10.66M1082.11,569.54c-5.34,0-8.74-4.37-8.74-8.62s3.4-8.61,8.74-8.61,8.67,4.36,8.67,8.61-3.33,8.62-8.67,8.62"/>
+        <polygon class="logo-word" points="1101.91 569.12 1101.91 550.66 1099.29 550.66 1099.29 571.17 1114.68 571.17 1114.68 569.12 1101.91 569.12"/>
+        <path class="logo-word" d="M1135.36,550.66v12.33c0,4.28-2.72,6.54-6.79,6.54s-6.79-2.26-6.79-6.54v-12.33h-2.62v12.36c0,5.28,3.76,8.56,9.41,8.56s9.41-3.28,9.41-8.56v-12.36h-2.62Z"/>
+        <polygon class="logo-word" points="1143.13 550.66 1143.13 552.71 1151.1 552.71 1151.1 571.17 1153.72 571.17 1153.72 552.71 1161.68 552.71 1161.68 550.66 1143.13 550.66"/>
+        <rect class="logo-word" x="1167.06" y="550.67" width="2.63" height="20.51"/>
+        <path class="logo-word" d="M1187.07,550.26c-6.9,0-11.33,5.33-11.33,10.66s4.43,10.67,11.33,10.67,11.32-5.33,11.32-10.67-4.44-10.66-11.32-10.66M1187.1,569.54c-5.34,0-8.74-4.37-8.74-8.62s3.4-8.61,8.74-8.61,8.67,4.36,8.67,8.61-3.33,8.62-8.67,8.62"/>
+        <polygon class="logo-word" points="1221.22 550.66 1221.22 567.98 1206.83 550.66 1204.28 550.66 1204.28 571.17 1206.77 571.17 1206.77 553.85 1221.15 571.17 1223.71 571.17 1223.71 550.66 1221.22 550.66"/>
+        <path class="logo-word" d="M1241.59,559.72l-5.17-.91c-2.66-.47-3.53-1.4-3.53-3.1,0-2.26,2.35-3.58,5.75-3.58s5.31,1.64,5.88,4.02h2.55c-.6-3.61-3.56-5.89-8.37-5.89s-8.37,2.25-8.37,5.51c0,2.69,1.79,4.27,5.28,4.92l5.18.94c2.82.49,4.3,1.76,4.3,3.72,0,2.49-2.12,4.37-6.05,4.37s-6.18-1.91-6.89-4.55h-2.55c.87,3.84,4.13,6.42,9.41,6.42,4.94,0,8.63-2.58,8.63-6.33,0-2.96-2.15-4.86-6.05-5.54"/>
+        <g>
+          <polygon class="logo-mark" points="581.32 571.35 566.9 555.01 559.29 563.71 558.22 564.74 552.39 571.35 529.6 571.35 546.93 551.55 547.9 550.53 567.54 528.03 571.63 523.33 581.08 512.5 604.12 512.5 586.11 533.08 578.35 541.92 604.12 571.35 581.32 571.35"/>
+          <polygon class="logo-mark" points="539.3 497.78 475.15 571.34 452.36 571.34 516.81 497.78 539.3 497.78"/>
+          <polygon class="logo-mark" points="559.13 519.96 554.09 525.65 544.8 536.2 513.78 571.34 490.97 571.34 547.22 506.37 556.19 516.61 556.7 517.13 559.13 519.96"/>
+        </g>
+        <polygon class="logo-word" points="647.52 540.22 698.01 540.22 698.01 526.85 647.52 526.85 647.52 511.15 704.82 511.15 704.82 497.78 632.47 497.78 632.47 501.14 632.47 511.15 632.47 526.85 632.47 540.22 632.47 557.97 632.47 566.55 632.47 571.35 705.2 571.35 705.2 557.97 647.52 557.97 647.52 540.22"/>
+      </svg>
+      <span class="tagline">Precision Clean. Reliable Care.</span>
+    </div>
+    <div class="cover-body">
+      <div class="cover-copy">
+        <div class="eyebrow">Residential Cleaning Proposal</div>
+        <span class="hr-mark"></span>
+        <h1 class="cover-title">Hacienda</h1>
+        <p class="cover-address">3/249 Harts Road, Indooroopilly QLD 4068</p>
+        <p class="cover-sub">Prepared for Giselle &amp; Emil</p>
+        <div class="cover-meta">
+          <div class="cover-meta-item">
+            <div class="eyebrow">Prepared by</div>
+            <div>Elevex Property Solutions</div>
+          </div>
+          <div class="cover-meta-item">
+            <div class="eyebrow">Date</div>
+            <div>21 August 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="cover-graphic">
+        <svg class="cover-watermark" viewBox="0 0 700.96 339.82" aria-hidden="true">
+          <polygon class="cw-bright" points="595.66 339.82 529.04 264.35 493.91 304.54 488.94 309.32 462.03 339.82 356.75 339.82 436.83 248.41 441.31 243.68 532.02 139.76 550.89 118.05 594.54 68.02 700.96 68.02 617.78 163.06 581.96 203.92 700.95 339.82 595.66 339.82"/>
+          <polygon class="cw-mid" points="401.56 0 105.26 339.81 0 339.81 297.7 0 401.56 0"/>
+          <polygon class="cw-mid" points="493.14 102.46 469.87 128.74 426.95 177.49 283.69 339.81 178.34 339.81 438.15 39.7 479.6 87 481.93 89.42 493.14 102.46"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="intro reveal">
+    <p>Thank you for the opportunity to look after Hacienda. Following the scope confirmed with Laura, we&rsquo;ve put together a dedicated weekly service every Friday, mid-morning, with a separate monthly visit covering the areas outside the weekly rotation.</p>
+    <p>Your Elevex crew will be assigned as your regular team, so the same people are looking after the property week to week.</p>
+  </section>
+
+  <section class="weekly reveal">
+    <div class="section-head">
+      <div class="eyebrow">Weekly</div>
+      <h2>Weekly Cleaning Service</h2>
+    </div>
+
+    <dl class="factlist">
+      <div><dt>Preferred day</dt><dd>Friday</dd></div>
+      <div><dt>Preferred time</dt><dd>~10:00am, flexible</dd></div>
+      <div><dt>Labour allocation</dt><dd><span class="countup" data-to="6">6</span> hrs / visit</dd></div>
+    </dl>
+
+    <h3 class="group-title" style="font-size:0.95rem;margin-bottom:1.2rem;">Scope of Works</h3>
+    <div class="scope-groups">
+      <div>
+        <h3 class="group-title">Ground Level</h3>
+        <ul class="ticklist">
+          <li>Vacuum and mop floors</li>
+          <li>Wipe down benchtops and other surfaces</li>
+          <li>Clean ground-floor toilet</li>
+          <li>Dishwasher loaded/unloaded as required; items with gold detailing hand-washed only</li>
+          <li>Empty kitchen rubbish and take to bins at the top of the driveway</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="group-title">Stairs &amp; Master Area</h3>
+        <ul class="ticklist">
+          <li>Vacuum and mop stairs</li>
+          <li>Vacuum and mop master bedroom and master landing</li>
+          <li>Clean master bathroom and toilet</li>
+          <li>Wipe down surfaces and mirrors</li>
+          <li>Empty master bedroom and bathroom rubbish and take to bins at the top of the driveway</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="group-title">Laundry &amp; Household</h3>
+        <ul class="ticklist">
+          <li>Ironing as required within the allocated service time</li>
+          <li>Remove and wash master-bed sheets</li>
+          <li>Dry bed linen</li>
+          <li>Remake master bed with clean sheets</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pricing-panel">
+      <div class="ledger-line">
+        <span class="ledger-label">6 labour hours @ $60.00 + GST per hour</span>
+        <span class="ledger-dots"></span>
+        <span class="ledger-value">$360.00</span>
+      </div>
+      <div class="pricing-total-row">
+        <div class="eyebrow">Total per weekly service</div>
+        <div class="pricing-figure">$<span class="countup" data-to="360">360</span><sup>.00 + GST</sup></div>
+      </div>
+      <div class="pricing-note">
+        The six-hour allocation refers to total labour hours. Where appropriate, Elevex may allocate more than one team member to complete the service efficiently while maintaining the same total labour allocation.
+      </div>
+    </div>
+  </section>
+
+  <section class="monthly reveal">
+    <div class="section-head">
+      <div class="eyebrow">Monthly</div>
+      <h2>Monthly Additional Cleaning Service</h2>
+    </div>
+    <p style="color:var(--ink-soft);max-width:58ch;margin:0 0 1.7rem;">An additional service can be scheduled once per month on a separate agreed day and time.</p>
+
+    <h3 class="group-title">Scope of Works</h3>
+    <ul class="ticklist" style="margin-bottom:1.7rem;">
+      <li>Vacuum and mop spare bedrooms</li>
+      <li>Vacuum and mop gym</li>
+      <li>Vacuum and mop third level</li>
+      <li>Wipe down all glass in the stairwell and windows (where accessible)</li>
+      <li>Steam clean rugs &ndash; one rug in each living area</li>
+    </ul>
+
+    <div class="rate-line">
+      <span class="eyebrow">Rate</span> $60.00 + GST per labour hour
+    </div>
+    <p style="color:var(--ink-faint);font-size:0.9rem;max-width:58ch;margin:0;">The monthly service will be scheduled separately to ensure sufficient time is allocated to these additional areas and tasks. The required labour allocation can be confirmed following the initial service and assessment of the property.</p>
+  </section>
+
+  <section class="notes reveal">
+    <h2 class="section-heading">Service Notes</h2>
+    <ul class="notes-list">
+      <li>Scope of works confirmed with Laura Bland, Executive Assistant to Emil Juresic, prior to this proposal.</li>
+      <li>All rates shown are exclusive of GST, which is added at invoicing in line with standard practice.</li>
+      <li>Cleaning products and professional equipment will be supplied by Elevex Property Solutions unless otherwise agreed.</li>
+      <li>The agreed scope will be prioritised within the allocated labour hours.</li>
+      <li>Ironing requirements may vary from week to week and will be completed within the allocated service time.</li>
+      <li>Accessible windows and glass are limited to areas that can be safely reached without specialist access equipment.</li>
+    </ul>
+    <div class="aside-callout">
+      <strong>Also available:</strong> exterior cleaning services, including house washing, pressure cleaning, exterior window cleaning, gutter cleaning and other exterior maintenance &mdash; arranged separately upon request.
+    </div>
+  </section>
+
+  <section class="terms reveal">
+    <h2 class="section-heading">Proposal Terms</h2>
+    <ol class="terms-list">
+      <li><span class="terms-label">Validity</span>This proposal is valid for 30 days from the date above.</li>
+      <li><span class="terms-label">Scope</span>Pricing is based on the scope of works listed above. Any additional tasks will be quoted and agreed before proceeding.</li>
+      <li><span class="terms-label">Access &amp; valuables</span>Please secure or let us know about any fragile, high-value or sentimental items ahead of each service.</li>
+      <li><span class="terms-label">Rescheduling</span>48 hours&rsquo; notice is required to reschedule or cancel a service; late cancellations may incur a fee.</li>
+      <li><span class="terms-label">Termination</span>Either party may end this ongoing arrangement with one month&rsquo;s written notice.</li>
+      <li><span class="terms-label">Payment</span>Invoiced on a fortnightly or monthly basis, as preferred, payable on receipt of invoice.</li>
+      <li><span class="terms-label">Staffing</span>A regular team will be assigned to the property; if a regular team member is unavailable, a trained backup will attend to keep the service running.</li>
+      <li><span class="terms-label">Insurance</span>Elevex Property Solutions carries public liability insurance.</li>
+    </ol>
+  </section>
+
+  <section class="commitment-wrap reveal" style="border-bottom:none;padding-bottom:0;">
+    <div class="commitment">
+      <svg class="commitment-mark" viewBox="0 0 700.96 339.82" aria-hidden="true">
+        <polygon class="cw-bright" points="595.66 339.82 529.04 264.35 493.91 304.54 488.94 309.32 462.03 339.82 356.75 339.82 436.83 248.41 441.31 243.68 532.02 139.76 550.89 118.05 594.54 68.02 700.96 68.02 617.78 163.06 581.96 203.92 700.95 339.82 595.66 339.82"/>
+        <polygon class="cw-mid" points="401.56 0 105.26 339.81 0 339.81 297.7 0 401.56 0"/>
+        <polygon class="cw-mid" points="493.14 102.46 469.87 128.74 426.95 177.49 283.69 339.81 178.34 339.81 438.15 39.7 479.6 87 481.93 89.42 493.14 102.46"/>
+      </svg>
+      <h2>Service Commitment</h2>
+      <p>Elevex Property Solutions will provide a reliable and consistent cleaning team, with a strong focus on attention to detail, care of the property and maintaining the agreed cleaning standard each week.</p>
+      <div class="commitment-figures">
+        <div><strong>$<span class="countup" data-to="360">360</span> + GST</strong><span>Weekly service</span></div>
+        <div><strong>Every Friday</strong><span>Frequency</span></div>
+        <div><strong><span class="countup" data-to="6">6</span> hrs</strong><span>Labour per visit</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="signoff reveal">
+    <p class="closing">We look forward to looking after Giselle and Emil&rsquo;s home.</p>
+    <div class="team-signoff">
+      <svg class="brand-mark" viewBox="0 0 700.96 339.82" aria-hidden="true">
+        <polygon points="595.66 339.82 529.04 264.35 493.91 304.54 488.94 309.32 462.03 339.82 356.75 339.82 436.83 248.41 441.31 243.68 532.02 139.76 550.89 118.05 594.54 68.02 700.96 68.02 617.78 163.06 581.96 203.92 700.95 339.82 595.66 339.82"/>
+        <polygon points="401.56 0 105.26 339.81 0 339.81 297.7 0 401.56 0"/>
+        <polygon points="493.14 102.46 469.87 128.74 426.95 177.49 283.69 339.81 178.34 339.81 438.15 39.7 479.6 87 481.93 89.42 493.14 102.46"/>
+      </svg>
+      The Elevex Property Solutions Team
+    </div>
+  </section>
+
+  <section class="cta reveal">
+    <span class="tagline">Precision Clean. Reliable Care.</span>
+    <h2>Ready to move forward?</h2>
+    <p>Confirm below and our team will lock in Friday as your regular service day.</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="mailto:info@elevexsolutions.com.au?subject=Proposal%20Accepted%20%E2%80%94%20Hacienda%2C%203%2F249%20Harts%20Road&body=Hi%20Elevex%20team%2C%0A%0AWe%27d%20like%20to%20go%20ahead%20with%20the%20proposed%20weekly%20and%20monthly%20cleaning%20service%20for%20Hacienda%2C%203%2F249%20Harts%20Road%2C%20Indooroopilly.%0A%0AThanks%2C%0AGiselle%20%26%20Emil">Accept &amp; Confirm</a>
+      <a class="btn btn-secondary" href="tel:1800927448">Call the team</a>
+    </div>
+    <div class="cta-contact">
+      <a href="mailto:info@elevexsolutions.com.au">info@elevexsolutions.com.au</a>
+      <span>&middot;</span>
+      <a href="tel:1800927448">1800 WASH IT</a>
+      <span>&middot;</span>
+      <a href="https://elevexsolutions.com.au">elevexsolutions.com.au</a>
+    </div>
+    <p class="cta-fine">No obligation until confirmed in writing &middot; happy to talk through any part of the scope</p>
+  </section>
+
+</main>
+
+<footer>
+  <svg class="brand-logo" viewBox="446 490 812 90" role="img" aria-label="Elevex Property Solutions">
+    <rect class="logo-word" x="715.07" y="497.78" width="14.81" height="73.57"/>
+    <path class="logo-word" d="M809.06,544.95c0-10.45-1.35-15.51-5.05-19.69-4.49-4.83-11.1-6.37-28.04-6.37-18.28,0-25.12,1.21-29.83,5.49-4.49,4.07-6.39,10.34-6.39,21.45,0,13.74,3.02,20.01,11.1,23.64,4.04,1.76,13.46,2.75,25.46,2.75,15.59,0,22.99-1.32,27.59-4.95,3.25-2.64,4.82-6.38,5.04-11.99h-14.58c-.78,5.83-4.59,7.48-16.93,7.48-10.99,0-17.16-.88-19.4-2.86-2.02-1.87-3.03-5.61-3.14-11.54h54.17v-3.41ZM754.89,539.78v-.66c0-3.96,1.68-7.37,4.37-8.8,3.14-1.65,6.39-1.98,17.72-1.98,5.5,0,10.43.77,13.01,1.87,1.12.55,2.24,1.65,3.03,3.08,1.01,1.87,1.34,3.52,1.34,6.49h-39.47Z"/>
+    <polygon class="logo-word" points="871.19 519.77 850.22 560.67 829.24 519.77 812.53 519.77 840.23 571.34 860.2 571.34 887.79 519.77 871.19 519.77"/>
+    <path class="logo-word" d="M960.57,544.95c0-10.45-1.34-15.51-5.04-19.69-4.49-4.83-11.11-6.37-28.04-6.37-18.28,0-25.12,1.21-29.83,5.49-4.49,4.07-6.4,10.34-6.4,21.45,0,13.74,3.03,20.01,11.11,23.64,4.03,1.76,13.45,2.75,25.45,2.75,15.59,0,23-1.32,27.59-4.95,3.26-2.64,4.83-6.38,5.05-11.99h-14.58c-.78,5.83-4.6,7.48-16.93,7.48-10.99,0-17.16-.88-19.41-2.86-2.02-1.87-3.03-5.61-3.14-11.54h54.17v-3.41ZM906.4,539.78v-.66c0-3.96,1.68-7.37,4.38-8.8,3.14-1.65,6.39-1.98,17.72-1.98,5.49,0,10.43.77,13.01,1.87,1.12.55,2.24,1.65,3.03,3.08,1,1.87,1.34,3.52,1.34,6.49h-39.48Z"/>
+    <polygon class="logo-word" points="1010.59 543.74 1033.47 519.77 1014.41 519.77 999.15 536.59 984.24 519.77 964.83 519.77 988.05 544.29 962.37 571.34 981.1 571.34 999.15 551.11 1017.32 571.34 1036.39 571.34 1010.59 543.74"/>
+    <path class="logo-word" d="M1059.18,519.68h-10.18v20.51h2.62v-8.67h7.56c4.47,0,7.6-2.67,7.6-5.95s-3.03-5.89-7.6-5.89M1058.91,529.52h-7.29v-7.85h7.29c3.33,0,5.25,1.7,5.25,3.9s-1.92,3.95-5.25,3.95"/>
+    <path class="logo-word" d="M1090.51,525.51c0-3.22-3.16-5.83-7.9-5.83h-10.38v20.51h2.62v-8.79h6.42l5.31,8.79h2.82l-5.38-8.88c3.9-.5,6.49-2.84,6.49-5.8M1074.85,529.41v-7.74h7.5c3.46,0,5.54,1.67,5.54,3.84s-2.08,3.9-5.54,3.9h-7.5Z"/>
+    <path class="logo-word" d="M1106.55,519.28c-6.89,0-11.33,5.33-11.33,10.67s4.44,10.66,11.33,10.66,11.33-5.33,11.33-10.66-4.44-10.67-11.33-10.67M1106.58,538.56c-5.34,0-8.73-4.36-8.73-8.61s3.39-8.62,8.73-8.62,8.67,4.37,8.67,8.62-3.32,8.61-8.67,8.61"/>
+    <path class="logo-word" d="M1133.95,519.68h-10.18v20.51h2.62v-8.67h7.56c4.47,0,7.6-2.67,7.6-5.95s-3.03-5.89-7.6-5.89M1133.68,529.52h-7.29v-7.85h7.29c3.33,0,5.24,1.7,5.24,3.9s-1.91,3.95-5.24,3.95"/>
+    <polygon class="logo-word" points="1149.62 538.14 1149.62 530.67 1162.79 530.67 1162.79 528.62 1149.62 528.62 1149.62 521.73 1163.26 521.73 1163.26 519.68 1147 519.68 1147 540.19 1163.53 540.19 1163.53 538.14 1149.62 538.14"/>
+    <path class="logo-word" d="M1187.8,525.51c0-3.22-3.16-5.83-7.89-5.83h-10.39v20.51h2.62v-8.79h6.42l5.31,8.79h2.82l-5.37-8.88c3.9-.5,6.48-2.84,6.48-5.8M1172.14,529.41v-7.74h7.5c3.46,0,5.54,1.67,5.54,3.84s-2.08,3.9-5.54,3.9h-7.5Z"/>
+    <polygon class="logo-word" points="1191.74 519.68 1191.74 521.73 1199.71 521.73 1199.71 540.19 1202.33 540.19 1202.33 521.73 1210.29 521.73 1210.29 519.68 1191.74 519.68"/>
+    <polygon class="logo-word" points="1230.7 519.68 1223.34 529.76 1215.98 519.68 1213.16 519.68 1222.03 531.75 1222.03 540.19 1224.65 540.19 1224.65 531.75 1233.52 519.68 1230.7 519.68"/>
+    <path class="logo-word" d="M1059.82,559.72l-5.18-.91c-2.65-.47-3.52-1.4-3.52-3.1,0-2.26,2.35-3.58,5.74-3.58s5.31,1.64,5.88,4.02h2.56c-.61-3.61-3.56-5.89-8.37-5.89s-8.37,2.25-8.37,5.51c0,2.69,1.78,4.27,5.28,4.92l5.17.94c2.83.49,4.3,1.76,4.3,3.72,0,2.49-2.11,4.37-6.04,4.37s-6.19-1.91-6.89-4.55h-2.56c.88,3.84,4.13,6.42,9.41,6.42,4.94,0,8.64-2.58,8.64-6.33,0-2.96-2.15-4.86-6.05-5.54"/>
+    <path class="logo-word" d="M1082.08,550.26c-6.9,0-11.33,5.33-11.33,10.66s4.43,10.67,11.33,10.67,11.32-5.33,11.32-10.67-4.43-10.66-11.32-10.66M1082.11,569.54c-5.34,0-8.74-4.37-8.74-8.62s3.4-8.61,8.74-8.61,8.67,4.36,8.67,8.61-3.33,8.62-8.67,8.62"/>
+    <polygon class="logo-word" points="1101.91 569.12 1101.91 550.66 1099.29 550.66 1099.29 571.17 1114.68 571.17 1114.68 569.12 1101.91 569.12"/>
+    <path class="logo-word" d="M1135.36,550.66v12.33c0,4.28-2.72,6.54-6.79,6.54s-6.79-2.26-6.79-6.54v-12.33h-2.62v12.36c0,5.28,3.76,8.56,9.41,8.56s9.41-3.28,9.41-8.56v-12.36h-2.62Z"/>
+    <polygon class="logo-word" points="1143.13 550.66 1143.13 552.71 1151.1 552.71 1151.1 571.17 1153.72 571.17 1153.72 552.71 1161.68 552.71 1161.68 550.66 1143.13 550.66"/>
+    <rect class="logo-word" x="1167.06" y="550.67" width="2.63" height="20.51"/>
+    <path class="logo-word" d="M1187.07,550.26c-6.9,0-11.33,5.33-11.33,10.66s4.43,10.67,11.33,10.67,11.32-5.33,11.32-10.67-4.44-10.66-11.32-10.66M1187.1,569.54c-5.34,0-8.74-4.37-8.74-8.62s3.4-8.61,8.74-8.61,8.67,4.36,8.67,8.61-3.33,8.62-8.67,8.62"/>
+    <polygon class="logo-word" points="1221.22 550.66 1221.22 567.98 1206.83 550.66 1204.28 550.66 1204.28 571.17 1206.77 571.17 1206.77 553.85 1221.15 571.17 1223.71 571.17 1223.71 550.66 1221.22 550.66"/>
+    <path class="logo-word" d="M1241.59,559.72l-5.17-.91c-2.66-.47-3.53-1.4-3.53-3.1,0-2.26,2.35-3.58,5.75-3.58s5.31,1.64,5.88,4.02h2.55c-.6-3.61-3.56-5.89-8.37-5.89s-8.37,2.25-8.37,5.51c0,2.69,1.79,4.27,5.28,4.92l5.18.94c2.82.49,4.3,1.76,4.3,3.72,0,2.49-2.12,4.37-6.05,4.37s-6.18-1.91-6.89-4.55h-2.55c.87,3.84,4.13,6.42,9.41,6.42,4.94,0,8.63-2.58,8.63-6.33,0-2.96-2.15-4.86-6.05-5.54"/>
+    <g>
+      <polygon class="logo-mark" points="581.32 571.35 566.9 555.01 559.29 563.71 558.22 564.74 552.39 571.35 529.6 571.35 546.93 551.55 547.9 550.53 567.54 528.03 571.63 523.33 581.08 512.5 604.12 512.5 586.11 533.08 578.35 541.92 604.12 571.35 581.32 571.35"/>
+      <polygon class="logo-mark" points="539.3 497.78 475.15 571.34 452.36 571.34 516.81 497.78 539.3 497.78"/>
+      <polygon class="logo-mark" points="559.13 519.96 554.09 525.65 544.8 536.2 513.78 571.34 490.97 571.34 547.22 506.37 556.19 516.61 556.7 517.13 559.13 519.96"/>
+    </g>
+    <polygon class="logo-word" points="647.52 540.22 698.01 540.22 698.01 526.85 647.52 526.85 647.52 511.15 704.82 511.15 704.82 497.78 632.47 497.78 632.47 501.14 632.47 511.15 632.47 526.85 632.47 540.22 632.47 557.97 632.47 566.55 632.47 571.35 705.2 571.35 705.2 557.97 647.52 557.97 647.52 540.22"/>
+  </svg>
+  elevexsolutions.com.au
+</footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduceMotion || !('IntersectionObserver' in window)){
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
+  }
+
+  var countEls = document.querySelectorAll('.countup');
+  function animateCount(el){
+    var target = parseInt(el.getAttribute('data-to'), 10) || 0;
+    if(reduceMotion){ el.textContent = target; return; }
+    var duration = 1000;
+    var start = null;
+    function step(ts){
+      if(start === null) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if(progress < 1){ requestAnimationFrame(step); }
+      else { el.textContent = target; }
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window){
+    var countObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          animateCount(entry.target);
+          countObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    countEls.forEach(function(el){ countObserver.observe(el); });
+  } else {
+    countEls.forEach(function(el){ el.textContent = el.getAttribute('data-to'); });
+  }
+})();
+</script>
