@@ -5,6 +5,79 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Figtree:wght@300;400;500;600;700&display=swap">
 <style>
+/* Better gallery layout - mobile first */
+.gal {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  columns: unset !important;
+  padding-inline: var(--gut) !important;
+}
+.gal figure {
+  margin: 0 !important;
+  break-inside: auto !important;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 520px) {
+  .gal {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  /* Make first image span full width for hero impact */
+  .gal figure:first-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Desktop: 3 columns with first image spanning 2 cols */
+@media (min-width: 768px) {
+  .gal {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+  .gal figure:first-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Large desktop: featured layout */
+@media (min-width: 1024px) {
+  .gal {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+  .gal figure:first-child {
+    grid-column: 1 / -1 !important;
+  }
+  /* 2nd and 3rd images side by side under hero */
+  .gal figure:nth-child(2),
+  .gal figure:nth-child(3) {
+    grid-column: span 1 !important;
+  }
+}
+
+/* Floorplan section */
+.floorplan {
+  padding: clamp(2rem,6vw,4rem) clamp(1.5rem,4vw,3rem) !important;
+  background: var(--paper, var(--bg, #fafbff)) !important;
+  border-top: 1px solid var(--hair, #e0e0e0) !important;
+}
+.floorplan img {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08) !important;
+}
+
+/* Mobile: ensure no horizontal overflow */
+@media (max-width: 768px) {
+  html, body { overflow-x: hidden !important; }
+  img { max-width: 100% !important; height: auto !important; }
+  .gal img { width: 100% !important; height: auto !important; }
+}
+</style>
+<style>
 /* 16 Viewbank Court — buyer page. Same identity as the campaign plan:
    noir ground, Archivo over Figtree, one steel-blue accent. Single committed look. */
 :root{
