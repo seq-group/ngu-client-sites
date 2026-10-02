@@ -1,3 +1,0 @@
-# Off market. Lift this when the property is advertised publicly.
-User-agent: *
-Disallow: /
