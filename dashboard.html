@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cyril — Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e5e5e5;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:16px}
+h1{font-size:24px;margin-bottom:16px}
+.card{background:#141414;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:16px}
+.card h2{font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.badge{background:#BA1212;color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px}
+.badge-green{background:#16a34a}
+.badge-blue{background:#2563eb}
+.badge-yellow{background:#ca8a04}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+.task{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #1a1a1a}
+.task input{accent-color:#BA1212;width:18px;height:18px}
+.task.done span{text-decoration:line-through;opacity:.5}
+.email{padding:8px 0;border-bottom:1px solid #1a1a1a;font-size:13px}
+.email .from{color:#888;font-size:11px}
+.tab-bar{display:flex;gap:4px;margin-bottom:12px}
+.tab{padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;background:#1a1a1a;border:none;color:#888}
+.tab.active{background:#BA1212;color:#fff}
+.invoice{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1a1a1a}
+.invoice.paid{opacity:.4;text-decoration:line-through}
+.checklist label{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px}
+.checklist input{accent-color:#BA1212}
+a{color:#BA1212;text-decoration:none}
+.btn{background:#BA1212;color:#fff;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:12px}
+.btn-sm{padding:4px 10px;font-size:11px}
+.alert{background:#BA1212;color:#fff;padding:12px;border-radius:8px;margin-bottom:16px;font-weight:600}
+.add-task{display:flex;gap:8px;margin-top:8px}
+.add-task input{flex:1;background:#1a1a1a;border:1px solid #333;color:#e5e5e5;padding:6px 10px;border-radius:6px;font-size:13px}
+</style></head><body>
+<div class="alert">⚠️ 5 tasks pending · $1,489 Elevex outstanding · 0 unread important emails</div>
+<h1>Cyril — Dashboard</h1>
+<div class="grid">
+<!-- TASKS -->
+<div class="card"><h2>✅ Tasks</h2>
+<div id="tasks"></div>
+<div class="add-task"><input id="newTask" placeholder="Add task..." onkeydown="if(event.key==='Enter')addTask()"><button class="btn btn-sm" onclick="addTask()">Add</button></div>
+</div>
+<!-- PROPERTIES -->
+<div class="card"><h2>🏠 Properties</h2>
+<div class="task"><span class="badge badge-green">Live</span><a href="https://seq-group.github.io/ngu-client-sites/16-viewbank/">16 Viewbank Ct Beenleigh</a></div>
+<div class="task"><span class="badge badge-green">Live</span><a href="https://seq-group.github.io/ngu-client-sites/508-chester/">508 Chester St — Seller</a></div>
+<div class="task"><span class="badge badge-green">Live</span><a href="https://seq-group.github.io/ngu-client-sites/508-chester/buyer/">508 Chester St — Buyer</a></div>
+<div class="task"><span class="badge badge-green">Live</span><a href="https://seq-group.github.io/ngu-client-sites/lawson-street/">33208 Lawson St Southport</a></div>
+<div class="task"><span class="badge badge-yellow">Draft</span>24D/973 Gold Coast Hwy Palm Beach</div>
+</div>
+<!-- EMAILS -->
+<div class="card"><h2>📧 Emails <span class="badge">28</span></h2>
+<div class="tab-bar"><button class="tab active" onclick="filterEmail('all',this)">All</button><button class="tab" onclick="filterEmail('real_estate',this)">RE</button><button class="tab" onclick="filterEmail('finance',this)">Finance</button><button class="tab" onclick="filterEmail('other',this)">Other</button></div>
+<div id="emails"></div>
+</div>
+<!-- ELEVEX -->
+<div class="card"><h2>🧹 Elevex Invoices</h2>
+<div id="invoices"></div>
+<div style="margin-top:8px;font-weight:600">Total owed: $<span id="invTotal">0</span></div>
+</div>
+<!-- REX CRM -->
+<div class="card"><h2>📊 Rex CRM</h2>
+<div class="task">📈 <span>138,156 contacts</span></div>
+<div class="task">🏠 <span>3,699 listings</span></div>
+<div class="task">📋 <span>617 appraisals</span></div>
+<div class="task">⏰ <span>30,360 reminders</span></div>
+<div class="task">📝 <span>49,873 activities</span></div>
+</div>
+<!-- OPEN HOME -->
+<div class="card"><h2>📋 Open Home Checklist</h2>
+<div class="checklist" id="checklist"></div>
+<div style="margin-top:8px;display:flex;gap:8px"><button class="btn btn-sm" onclick="window.print()">Print</button><button class="btn btn-sm" onclick="resetChecklist()">Reset</button></div>
+</div>
+<!-- NEW BUSINESS -->
+<div class="card"><h2>⛳ New Business</h2>
+<div class="task">🏌️ Golf head covers — research phase</div>
+<div class="task">🪸 Coral vault — repo created</div>
+</div>
+</div>
+<script>
+const TASKS_KEY='cyril_tasks',INV_KEY='cyril_inv',CHK_KEY='cyril_chk';
+const defaultTasks=[{id:'ato',t:'Pay ATO',d:0},{id:'papi',t:'Pay $1,500 Papi (rent)',d:0},{id:'ins',t:'Pay insurance',d:0},{id:'mam',t:'Pay maman',d:0},{id:'law',t:'Drop file to lawyer',d:0}];
+const defaultInv=[{id:'trailer',d:'Trailer',a:400,p:0},{id:'byron',d:'Byron pay',a:500,p:0},{id:'printer',d:'Printer',a:200,p:0},{id:'pool',d:'Pool shop',a:135,p:0},{id:'bunnings',d:'Bunnings',a:86.78,p:0},{id:'sydney',d:'Sydney transport',a:27.67,p:0},{id:'capcut',d:'CapCut subscription',a:139.99,p:0}];
+const chkItems=['Business cards','QR code docs','Appraisal sheet','Broker sheet','Fast facts','Water','Mints','Candle','A-frame sign','Form 2','Contract','Brochures','iPad charged','Signboard'];
+const emails=[
+{f:'Core Studios',s:'Delivery notification 24d/973 Gold Coast Hwy',c:'real_estate'},{f:'Basecamp NGU',s:'Latest activity on Basecamp',c:'real_estate'},{f:'Cyril Texier',s:'24D Royal Palms – Property Information',c:'real_estate'},{f:'Cyril Texier',s:'Next Steps – 24D/973 Gold Coast Highway',c:'real_estate'},{f:'Claire Wong NGU',s:'Re: Flyers',c:'real_estate'},{f:'Brisbane Reception',s:'Urgent Car Parking Update',c:'real_estate'},{f:'Brisbane Reception',s:'Fwd: SearchX Proposal',c:'real_estate'},{f:'Jewel Caneda NGU',s:'Sales Foundation & Growth Group',c:'real_estate'},{f:'Brisbane Reception',s:'Giselles Birthday Celebration',c:'real_estate'},{f:'Brisbane Reception',s:'Quarterly Prospecting Marathon',c:'real_estate'},{f:'Smit Mehta',s:'Sold Videos',c:'other'},{f:'Edgar Nguyen',s:'Overlay Sticker Signboard 24D',c:'real_estate'},{f:'Cooper Signs',s:'RE: Overlay Sticker Signboard',c:'real_estate'},{f:'Id4me',s:'Subscription will renew soon',c:'finance'},{f:'Id4me',s:'Receipt #2736-3900',c:'finance'},{f:'Dane Michaels',s:'Re: 00628_DMSTUDIOCO Invoice',c:'finance'},{f:'Merve Gamulin',s:'Gold Coast Price List - Leo Referral',c:'other'},{f:'FACCI QLD',s:'2026 European End Year Celebration',c:'other'},{f:'Rowland Hill',s:'Booking Order - Ambulance Active',c:'other'},{f:'Direction EDYSOL',s:'Re: Market Update',c:'other'}
+];
+function load(k,d){try{const v=JSON.parse(localStorage.getItem(k));if(v)return v}catch(e){}return d}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function renderTasks(){const tasks=load(TASKS_KEY,defaultTasks);const el=document.getElementById('tasks');el.innerHTML='';tasks.forEach((t,i)=>{el.innerHTML+=`<div class="task${t.d?' done':''}"><input type="checkbox" ${t.d?'checked':''} onchange="toggleTask(${i})"><span>${t.t}</span><button style="margin-left:auto;background:none;border:none;color:#555;cursor:pointer;font-size:16px" onclick="delTask(${i})">×</button></div>`})}
+function toggleTask(i){const t=load(TASKS_KEY,defaultTasks);t[i].d=t[i].d?0:1;save(TASKS_KEY,t);renderTasks();updateAlert()}
+function delTask(i){const t=load(TASKS_KEY,defaultTasks);t.splice(i,1);save(TASKS_KEY,t);renderTasks();updateAlert()}
+function addTask(){const inp=document.getElementById('newTask');if(!inp.value.trim())return;const t=load(TASKS_KEY,defaultTasks);t.push({id:'t'+Date.now(),t:inp.value.trim(),d:0});save(TASKS_KEY,t);inp.value='';renderTasks();updateAlert()}
+function renderEmails(cat){const el=document.getElementById('emails');el.innerHTML='';const filtered=cat==='all'?emails:emails.filter(e=>e.c===cat);filtered.forEach(e=>{el.innerHTML+=`<div class="email"><div class="from">${e.f}</div><div>${e.s}</div></div>`})}
+function filterEmail(c,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderEmails(c)}
+function renderInv(){const inv=load(INV_KEY,defaultInv);const el=document.getElementById('invoices');el.innerHTML='';let total=0;inv.forEach((v,i)=>{if(!v.p)total+=v.a;el.innerHTML+=`<div class="invoice${v.p?' paid':''}"><span>$${v.a.toFixed(2)} — ${v.d}</span><input type="checkbox" ${v.p?'checked':''} onchange="toggleInv(${i})"></div>`});document.getElementById('invTotal').textContent=total.toFixed(2)}
+function toggleInv(i){const inv=load(INV_KEY,defaultInv);inv[i].p=inv[i].p?0:1;save(INV_KEY,inv);renderInv();updateAlert()}
+function renderChk(){const chk=load(CHK_KEY,{});const el=document.getElementById('checklist');el.innerHTML='';chkItems.forEach(item=>{const checked=chk[item]?1:0;el.innerHTML+=`<label><input type="checkbox" ${checked?'checked':''} onchange="toggleChk('${item}')">${item}</label>`})}
+function toggleChk(item){const chk=load(CHK_KEY,{});chk[item]=chk[item]?0:1;save(CHK_KEY,chk);renderChk()}
+function resetChecklist(){localStorage.removeItem(CHK_KEY);renderChk()}
+function updateAlert(){const tasks=load(TASKS_KEY,defaultTasks);const pending=tasks.filter(t=>!t.d).length;const inv=load(INV_KEY,defaultInv);const owed=inv.filter(i=>!i.p).reduce((s,i)=>s+i.a,0);document.querySelector('.alert').textContent=`⚠️ ${pending} tasks pending · $${owed.toFixed(0)} Elevex outstanding`}
+renderTasks();renderEmails('all');renderInv();renderChk();
+</script>
+</body></html>
